@@ -17,7 +17,7 @@ const App = () => {
   )
 
   const [account, setAccount] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [walletLoading, setWalletLoading] = useState(false)
   const [mining, setMining] = useState(false)
   const [minted, setMinted] = useState(null)
 
@@ -25,7 +25,7 @@ const App = () => {
     if (!ethereum) {
       return false
     }
-    setLoading(true)
+    setWalletLoading(true)
     const connected = await ethereum.enable()
     const accounts = await ethereum.request({ method: 'eth_accounts' });
     /*
@@ -38,12 +38,12 @@ const App = () => {
     } else {
       console.log("No authorized account found")
     }
-    setLoading(false)
+    setWalletLoading(false)
   }
   // Render Methods
-  const renderNotConnectedContainer = () => (
-    <button className="cta-button connect-wallet-button" onClick={connectWallet}>
-      {!loading ? "Connect Wallet" : "Loading..."}
+  const connectWalletButton = () => (
+    <button className={"animate-gradient bg-4x mx-auto h-3 border-none w-auto px-6 flex py-1 h-10 flex items-center rounded border-r-2 cursor-pointer text-xl font-bold text-white bg-gradient-to-r from-cyan-400 to-purple-600"} onClick={connectWallet}>
+      {!walletLoading ? "Connect Wallet" : "Loading..."}
     </button>
   );
 
@@ -81,11 +81,11 @@ const App = () => {
       console.log(error)
     }
   }
-  const gradient = "bg-gradient-to-br from-teal-400 to-purple-600"
 
-  const renderConnectedContainer = () => {
+
+  const mintButton = () => {
     console.log("account", account);
-    return <button className={"mx-auto h-3 border-none w-auto px-6 flex py-1 h-10 flex items-center rounded border-r-2 cursor-pointer text-xl font-bold text-white" + " " + gradient} onClick={mintNFT}>
+    return <button className={"mx-auto h-3 border-none w-auto px-6 flex py-1 h-10 flex items-center rounded border-r-2 cursor-pointer text-xl font-bold text-white bg-gradient-to-br from-cyan-400 to-purple-600"} onClick={mintNFT}>
       {!mining ? "Mint a Key!" : "Mining..."}
     </button>
   }
@@ -93,19 +93,20 @@ const App = () => {
   const renderButton = () => {
     let result;
     console.log("account", account)
-    console.log("loading", loading)
-    if (account !== null && !loading) {
-      result = renderNotConnectedContainer()
+    console.log("loading", walletLoading)
+    console.log("bool", account !== null && !walletLoading)
+    if (account === null || walletLoading) {
+      result = connectWalletButton()
     } else {
-      result = renderConnectedContainer()
+      result = mintButton()
     }
     return result;
   }
 
 
   const renderNFT = () => (
-    <div className="rendered-nft">
-      <a href={minted} className={gradient}>View on OpenSea</a>
+    <div className="mt-12">
+      <a href={minted} className={"text-xl text-light-blue-500 font-bold mt-8"}>View on OpenSea</a>
     </div>
   )
 
@@ -113,12 +114,14 @@ const App = () => {
   return (
     <div className="bg-zinc-900 h-screen overflow-scroll text-center">
       <div className="h-full bg-zinc-900 flex flex-col justify-between">
-        <div className="pt-8 bg-zinc-900">
-          <p className={gradient + " " + "bg-clip-text text-transparent text-6xl font-black mb-4 animate-gradient"}>The Parisian Salon</p>
+        <div className="pt-8 bg-zinc-900 text-center">
+          <div className="mb-4">
+            <span className={"bg-gradient-to-br text-center from-cyan-400 to-purple-500 bg-clip-text text-transparent text-6xl font-black mb-8"}>The Parisian Salon</span>
+          </div>
           <div className="w-1/2 mx-auto overflow-wrap">
             <p className="font-2xl text-zinc-100 mb-20">
-              If you're here, it's because I want you to be a part of a community.
-          </p>
+              {"If you're here, it's because I want you to be a part of a community."}
+            </p>
           </div>
           {renderButton()}
           {
@@ -128,7 +131,7 @@ const App = () => {
         <div className="flex justify-center items-center pt-4">
           <img alt="Twitter Logo" className="h-7 w-7" src="/icons/twitter-logo.svg" />
           <a
-            className="text-zinc-100 font-semibold decoration-teal-400"
+            className="text-zinc-100 font-semibold decoration-cyan-400"
             href={TWITTER_LINK}
             target="_blank"
             rel="noreferrer"

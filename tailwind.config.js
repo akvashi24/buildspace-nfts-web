@@ -4,14 +4,18 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+
     extend: {
+      backgroundSize: {
+        '4x': "400%",
+      },
       animation: {
-        'gradient': 'carousel 4s ease infinite',
+        'gradient': 'carousel 7s ease infinite',
       },
       keyframes: {
         'carousel': {
           '0%': { 'background-position': "0% 50%" },
-          '50%': { 'background-position': "50% 100%" },
+          '50%': { 'background-position': "100% 50%" },
           '100%': { 'background-position': "0% 50%" },
         }
       }
